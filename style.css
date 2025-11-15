@@ -70,4 +70,25 @@ h1 {
 .banner p {
    color: #f6f9fa; 
 }
+.no-result {
+text-align: center;
+padding: 30px;
+}
 
+.hidden {
+display: none;
+}
+
+.footer {
+background: #111;
+color: #eee;
+padding: 30px;
+text-align: center;
+margin-top: 40px;
+}
+
+/* RESPONSIVE */
+@media(max-width: 600px) {
+.navbar { padding: 15px; }
+#searchInput { padding: 12px; }
+}
