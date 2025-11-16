@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TechHerPath — Resource Center</title>
+  <style>
+    /* ======= Basic Page Styling ======= */
+    :root{
+      --brand:#6d00cc; /* purple */
+      --brand-2:#8a2be2; /* lighter purple */
+      --accent:#007acc; /* blue links */
+      --muted:#f5f5f5;
+      --text:#222;
+      --footer-a:#ff7a00; /* bright orange to pair with purple */
+    }
+
+    html,body{height:100%;}
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: var(--muted);
+      color: var(--text);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+    }
+
+    /* ======= Layout helpers ======= */
+    .padding-content{padding:1rem 1.25rem;}
+    .container{max-width:1200px;margin:0 auto}
+
+    /* ======= NAV ======= */
+    nav.padding-content{display:flex;align-items:center;justify-content:space-between;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,0.05);}
+    .logo{display:flex;align-items:center;gap:.75rem}
+    .logo svg{width:46px;height:46px}
+    .logo h2{margin:0;font-size:1.25rem;color:var(--brand)}
+    .logo p{margin:0;font-size:0.75rem;color:#666}
+    .nav-list{list-style:none;display:flex;gap:1rem;margin:0;padding:0}
+    .nav-list a{color:var(--text);text-decoration:none;font-size:0.95rem}
+
+    .profile{display:flex;flex-direction:column;align-items:flex-end}
+    .profile1{margin:0;font-size:0.95rem}
+    .hide{display:none}
+
+    /* ======= Header ======= */
+    .header{background:linear-gradient(90deg,var(--brand),var(--brand-2));color:#fff;text-align:left;padding:2.25rem 1.25rem}
+    .header h1{margin:0;font-size:2rem}
+    .header p{margin:0.5rem 0 0;font-size:1rem;opacity:0.95}
+
+    /* ======= Features / Filters ======= */
+    .features{background:#fff;margin-top:1rem}
+    .features ul{display:flex;gap:1rem;list-style:none;padding:.75rem 1.25rem;margin:0;align-items:center}
+    .features li{padding:.5rem .75rem;border-radius:24px;cursor:pointer;border:1px solid transparent}
+    .features li:hover{background:#faf7ff}
+    .features .active{background:rgba(109,0,204,0.08);color:var(--brand);font-weight:700;border-color:rgba(109,0,204,0.12)}
+
+    .selectFeatures{background:#fff;margin-top:8px}
+    .form{display:flex;gap:.5rem;align-items:center;padding:.75rem 1.25rem}
+    .form input[type="text"], .form select{padding:.6rem .75rem;border-radius:8px;border:1px solid #e3e3e3;font-size:0.95rem}
+    .form input[type="text"]{flex:1}
+
+    /* ======= Resource Grid ======= */
+    .resources{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.25rem;padding:2rem 1.25rem;background:transparent}
+    .resource-item{background-color:#fff;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.06);padding:1.25rem;text-align:left;transition:transform .18s,box-shadow .18s}
+    .resource-item:hover{transform:translateY(-6px);box-shadow:0 8px 20px rgba(0,0,0,0.12)}
+    .resource-item h2{font-size:1.1rem;margin:0 0 .5rem}
+    .resource-item p{font-size:0.95rem;margin:0 0 1rem;color:#555}
+    .resource-item a{color:var(--accent);text-decoration:none;font-weight:600}
+    .resource-meta{font-size:.85rem;color:#777;margin-bottom:.75rem}
+    .badge{display:inline-block;padding:.25rem .5rem;border-radius:6px;font-size:.75rem;background:#f1f1f1;margin-right:.4rem}
+
+    /* ======= Empty state box ======= */
+    .resourcesFound{padding:2rem 1.25rem}
+    .resourcesFound .box{background:#fff;padding:1.5rem;border-radius:10px;display:flex;flex-direction:column;align-items:center;gap:.5rem;box-shadow:0 2px 8px rgba(0,0,0,0.05)}
+    .resourcesFound .box span{background:#eee;padding:.5rem 1rem;border-radius:6px}
+    .resourcesFound button{background:var(--brand);color:#fff;border:none;padding:.6rem 1rem;border-radius:8px;cursor:pointer}
+
+    /* ======= Footer ======= */
+    .footer{background:linear-gradient(90deg,var(--footer-a),var(--brand));color:#fff;padding:2rem 1.25rem;margin-top:2rem}
+    .footerBoxes{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;max-width:1200px;margin:0 auto}
+    .footer .item h3{margin-top:0}
+    .footer a{color:#fff;text-decoration:underline}
+    .copy{opacity:.95;text-align:center;margin-top:1rem}
+
+    /* ======= Search input shown in header area for accessibility (desktop small) ======= */
+    #searchInput{display:block;margin:1.25rem auto 0;padding:.6rem 1rem;width:90%;max-width:420px;border-radius:25px;border:1px solid #ddd;font-size:1rem}
+
+    /* Responsive tweaks */
+    @media(min-width:900px){
+      nav.padding-content{padding:1rem 2rem}
+      .header{padding:3rem 2rem}
+      .form input[type="text"]{max-width:540px}
+      #searchInput{display:none}
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <!-- NAV -->
+  <nav class="padding-content container">
+    <div class="logo">
+      <!-- Inline SVG logo -->
+      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+        <defs>
+          <linearGradient id="g1" x1="0" x2="1">
+            <stop offset="0" stop-color="#ff7a00" />
+            <stop offset="1" stop-color="#6d00cc" />
+          </linearGradient>
+        </defs>
+        <rect width="100" height="100" rx="18" fill="url(#g1)" />
+        <text x="50" y="60" font-size="40" font-family="Arial" fill="#fff" text-anchor="middle">TH</text>
+      </svg>
+      <div>
+        <h2>TechHerPath</h2>
+        <p>Empower Your Journey</p>
+      </div>
+    </div>
+
+    <ul class="nav-list">
+      <li><a href="#">Dashboard</a></li>
+      <li><a href="#">Career Road</a></li>
+      <li><a href="#">Find Mentors</a></li>
+      <li><a href="#">Resources</a></li>
+      <li><a href="#">Career Quiz</a></li>
+    </ul>
+
+    <div class="profile">
+      <h5 class="profile1">Profile Name</h5>
+    </div>
+  </nav>
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="container">
+      <h1>Learning Resources</h1>
+      <p>Curated courses, bootcamps and learning materials to accelerate your tech journey</p>
+    </div>
+  </div>
+
+  <!-- CATEGORY FILTERS -->
+  <div class="features">
+    <div class="container">
+      <ul id="featureList">
+        <li class="active" data-filter="all">All Resources</li>
+        <li data-filter="featured">Featured</li>
+        <li data-filter="free">Free</li>
+        <li data-filter="scholarship">Scholarship</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SEARCH & FILTER BAR -->
+  <div class="selectFeatures">
+    <div class="container">
+      <div class="form">
+        <input type="text" id="searchInputForm" placeholder="Search here for resources...">
+        <select id="typeSelect">
+          <option value="all">All Types</option>
+          <option value="course">Course</option>
+          <option value="guide">Guide</option>
+          <option value="bootcamp">Bootcamp</option>
+          <option value="webinar">Webinar</option>
+        </select>
+        <select id="costSelect">
+          <option value="all">All Costs</option>
+          <option value="free">Free</option>
+          <option value="paid">Paid</option>
+        </select>
+        <select id="levelSelect">
+          <option value="all">All Levels</option>
+          <option value="beginner">Beginner</option>
+          <option value="intermediate">Intermediate</option>
+          <option value="advanced">Advanced</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Search input for smaller screens (kept for accessibility) -->
+  <input type="text" id="searchInput" placeholder="Search resources...">
+
+  <!-- RESOURCES GRID -->
+  <section class="resources container" id="resourcesGrid">
+    <!-- many resource items with data attributes -->
+    <div class="resource-item" data-type="guide" data-cost="free" data-level="beginner" data-feature="free">
+      <div class="resource-meta"><span class="badge">Guide</span><span class="badge">Free</span></div>
+      <h2>Guide to HTML</h2>
+      <p>Learn the basics of HTML with simple examples and live-play exercises. Perfect for absolute beginners.</p>
+      <a href="#">Read More</a>
+    </div>
+
+    <div class="resource-item" data-type="guide" data-cost="free" data-level="intermediate" data-feature="featured">
+      <div class="resource-meta"><span class="badge">Guide</span><span class="badge">Free</span></div>
+      <h2>CSS Tips &amp; Tricks</h2>
+      <p>Enhance your web design with practical CSS tips for modern layouts, including Flexbox and Grid patterns.</p>
+      <a href="#">Read More</a>
+    </div>
+
+    <div class="resource-item" data-type="course" data-cost="paid" data-level="beginner" data-feature="featured">
+      <div class="resource-meta"><span class="badge">Course</span><span class="badge">Paid</span></div>
+      <h2>JavaScript Essentials</h2>
+      <p>Master JavaScript fundamentals to build interactive websites. Includes quizzes and projects.</p>
+      <a href="#">Enroll</a>
+    </div>
+
+    <div class="resource-item" data-type="course" data-cost="paid" data-level="advanced">
+      <div class="resource-meta"><span class="badge">Course</span><span class="badge">Paid</span></div>
+      <h2>Responsive Design</h2>
+      <p>Make your website look great on all devices using responsive techniques and performance best practices.</p>
+      <a href="#">Enroll</a>
+    </div>
+
+    <div class="resource-item" data-type="guide" data-cost="free" data-level="intermediate">
+      <div class="resource-meta"><span class="badge">Guide</span><span class="badge">Free</span></div>
+      <h2>Accessibility Guide</h2>
+      <p>Learn how to make your websites accessible to everyone — semantic HTML, ARIA, keyboard nav and testing.</p>
+      <a href="#">Read More</a>
+    </div>
+
+    <div class="resource-item" data-type="bootcamp" data-cost="paid" data-level="advanced" data-feature="featured">
+      <div class="resource-meta"><span class="badge">Bootcamp</span><span class="badge">Paid</span></div>
+      <h2>Full-Stack Web Bootcamp</h2>
+      <p>Intensive 12-week bootcamp covering front-end, back-end and deployment. Career support included.</p>
+      <a href="#">Apply</a>
+    </div>
+
+    <div class="resource-item" data-type="webinar" data-cost="free" data-level="beginner" data-feature="scholarship">
+      <div class="resource-meta"><span class="badge">Webinar</span><span class="badge">Free</span></div>
+      <h2>Intro to Tech Careers (Scholarship)</h2>
+      <p>A live webinar for learners from underrepresented backgrounds. Apply for scholarship access.</p>
+      <a href="#">Sign Up</a>
+    </div>
+
+    <div class="resource-item" data-type="course" data-cost="free" data-level="intermediate" data-feature="free">
+      <div class="resource-meta"><span class="badge">Course</span><span class="badge">Free</span></div>
+      <h2>Version Control with Git</h2>
+      <p>Understand Git basics, branching, merging and best practices for team workflows.</p>
+      <a href="#">Start Course</a>
+    </div>
+
+    <div class="resource-item" data-type="guide" data-cost="paid" data-level="advanced">
+      <div class="resource-meta"><span class="badge">Guide</span><span class="badge">Paid</span></div>
+      <h2>Advanced Performance Tuning</h2>
+      <p>Deep dive into performance optimisation for front-end and server-side workloads.</p>
+      <a href="#">Read More</a>
+    </div>
+
+    <div class="resource-item" data-type="course" data-cost="free" data-level="beginner" data-feature="scholarship">
+      <div class="resource-meta"><span class="badge">Course</span><span class="badge">Free</span></div>
+      <h2>Intro to Python (Scholarship)</h2>
+      <p>A beginner-friendly Python course with free scholarship seats for eligible applicants.</p>
+      <a href="#">Apply</a>
+    </div>
+
+    <div class="resource-item" data-type="webinar" data-cost="paid" data-level="intermediate">
+      <div class="resource-meta"><span class="badge">Webinar</span><span class="badge">Paid</span></div>
+      <h2>Design Systems Workshop</h2>
+      <p>Build and maintain design systems that scale across products. Includes templates and exercises.</p>
+      <a href="#">Book</a>
+    </div>
+
+    <div class="resource-item" data-type="course" data-cost="free" data-level="advanced" data-feature="featured">
+      <div class="resource-meta"><span class="badge">Course</span><span class="badge">Free</span></div>
+      <h2>Data Structures &amp; Algorithms</h2>
+      <p>Brush up on key algorithms and data structures with code examples and exercises.</p>
+      <a href="#">Start Course</a>
+    </div>
+
+  </section>
+
+  <!-- EMPTY STATE (shown when no resources match) -->
+  <div class="resourcesFound container" id="emptyState" style="display:none">
+    <h2 id="resultsCount">0 Resources Found</h2>
+    <p>High-quality learning materials curated for you</p>
+
+    <div class="box">
+      <span>Logo</span>
+      <h4>No resources found</h4>
+      <p>Try adjusting your filters or search query</p>
+      <button id="clearFilters">Clear All Filters</button>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footerBoxes container">
+      <div class="firstBox item">
+        <h3>TechHerPath</h3>
+        <p>Empowering women to navigate their tech careers with confidence, clarity and community support.</p>
+      </div>
+
+      <div class="secondBox item">
+        <h3>Quick Links</h3>
+        <ul>
+          <li><a href="#">Dashboard</a></li>
+          <li><a href="#">Career Paths</a></li>
+          <li><a href="#">Find Mentors</a></li>
+          <li><a href="#">Resources</a></li>
+        </ul>
+      </div>
+
+      <div class="thirdBox item">
+        <h3>Mission</h3>
+        <p>Aligned with SDG Goal 4: Quality Education, we're committed to supporting women with inclusive, accessible tech education.</p>
+      </div>
+    </div>
+
+    <p class="copy">&copy; 2025 TechHerPath. Empowering women in technology, one path at a time.</p>
+  </div>
+
+  <script>
+    // ======= Simple Search & Filter Logic (with feature buttons) =======
+    const inputs = {
+      searchDesktop: document.getElementById('searchInputForm'),
+      searchMobile: document.getElementById('searchInput'),
+      type: document.getElementById('typeSelect'),
+      cost: document.getElementById('costSelect'),
+      level: document.getElementById('levelSelect')
+    };
+
+    const resources = Array.from(document.querySelectorAll('.resource-item'));
+    const emptyState = document.getElementById('emptyState');
+    const resultsCount = document.getElementById('resultsCount');
+    const clearBtn = document.getElementById('clearFilters');
+    const featureButtons = Array.from(document.querySelectorAll('#featureList li'));
+
+    function normalize(v){return (v||'').toString().toLowerCase().trim();}
+
+    // store currently active feature filter (all|featured|free|scholarship)
+    let activeFeature = 'all';
+
+    function applyFilters(){
+      const q = normalize(inputs.searchDesktop.value || inputs.searchMobile.value);
+      const type = normalize(inputs.type.value);
+      const cost = normalize(inputs.cost.value);
+      const level = normalize(inputs.level.value);
+
+      let visible = 0;
+      resources.forEach(item =>{
+        const title = normalize(item.querySelector('h2').textContent);
+        const desc = normalize(item.querySelector('p').textContent);
+        const t = normalize(item.dataset.type);
+        const c = normalize(item.dataset.cost);
+        const l = normalize(item.dataset.level);
+        const feature = normalize(item.dataset.feature || '');
+
+        const matchesQuery = q === '' || title.includes(q) || desc.includes(q);
+        const matchesType = (type === 'all') || (t === type);
+        const matchesCost = (cost === 'all') || (c === cost);
+        const matchesLevel = (level === 'all') || (l === level);
+
+        // feature logic: if activeFeature is 'all' accept, otherwise item must have matching feature
+        const matchesFeature = (activeFeature === 'all') || (feature === activeFeature) || (activeFeature === 'free' && c === 'free');
+
+        const show = matchesQuery && matchesType && matchesCost && matchesLevel && matchesFeature;
+        item.style.display = show ? 'block' : 'none';
+        if(show) visible++;
+      });
+
+      resultsCount.textContent = `${visible} Resources Found`;
+      emptyState.style.display = visible === 0 ? 'block' : 'none';
+    }
+
+    // wire events
+    [inputs.searchDesktop, inputs.searchMobile].forEach(el=>el && el.addEventListener('input', applyFilters));
+    [inputs.type, inputs.cost, inputs.level].forEach(el=>el && el.addEventListener('change', applyFilters));
+
+    clearBtn.addEventListener('click', ()=>{
+      inputs.searchDesktop.value = '';
+      inputs.searchMobile.value = '';
+      inputs.type.value = 'all';
+      inputs.cost.value = 'all';
+      inputs.level.value = 'all';
+      activeFeature = 'all';
+      featureButtons.forEach(btn=>btn.classList.remove('active'));
+      featureButtons[0].classList.add('active');
+      applyFilters();
+    });
+
+    // feature buttons
+    featureButtons.forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        featureButtons.forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+        activeFeature = btn.dataset.filter;
+        applyFilters();
+      });
+    });
+
+    // initialize
+    applyFilters();
+  </script>
+
+</body>
+
+</html>
